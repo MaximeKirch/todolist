@@ -2,7 +2,7 @@
 import { extendTheme } from '@chakra-ui/react';
 
 const config = {
-  initialColorMode: 'light',
+  initialColorMode: 'dark',
   useSystemColorMode: false,
 };
 
@@ -13,7 +13,7 @@ const colors = {
     200: '#80b8ff',
     300: '#4d9bff',
     400: '#1b7eff',
-    500: '#005be6', // Couleur principale
+    500: '#005be6',
     600: '#0045b4',
     700: '#003182',
     800: '#001d50',
@@ -21,7 +21,6 @@ const colors = {
   },
 };
 
-// Étendre le thème Chakra par défaut
 const theme = extendTheme({
   config,
   colors,
@@ -32,16 +31,17 @@ const theme = extendTheme({
   styles: {
     global: {
       'html, body': {
-        height: '100%', // S'assure que le contenu utilise 100% de la hauteur de la fenêtre
+        height: '100%',
+        backgroundColor: 'gray.800',
       },
       '::-webkit-scrollbar': {
-        display: 'none', // Masque la barre de défilement pour Chrome, Safari et Opera
+        display: 'none',
       },
       html: {
-        scrollbarWidth: 'none', // Masque la barre de défilement pour Firefox
+        scrollbarWidth: 'none',
       },
       body: {
-        msOverflowStyle: 'none', // Désactive la barre de défilement pour IE et Edge
+        msOverflowStyle: 'none',
       },
     },
   },

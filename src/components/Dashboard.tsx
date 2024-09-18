@@ -8,11 +8,9 @@ export const Dashboard: React.FC = () => {
   const [filter, setFilter] = useState<string>('Today');
 
   return (
-    <Box bg={'gray.800'}>
+    <Box>
       <Header filter={filter} setFilter={setFilter} />
-      <Box height={'100%'} p={4}>
-        <Main filter={filter} />
-      </Box>
+      <Main filter={filter} />
     </Box>
   );
 };

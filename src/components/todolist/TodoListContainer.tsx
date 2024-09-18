@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Task } from '../../types/TaskType';
 import { filterTodos } from '../../utils/filterTodos';
 import { AddTodoContainer } from './AddTodoContainer';
+import { TodoItem } from '../ui/organisms/TodoItem';
 
 interface TodoListContainerProps {
   filter: string;
@@ -16,7 +17,6 @@ const fetchTodos = async () => {
 };
 
 export const TodoListContainer = ({ filter }: TodoListContainerProps) => {
-  // Utilisation de React Query pour récupérer les todos
   const {
     data: todos,
     isLoading,
@@ -70,24 +70,7 @@ export const TodoListContainer = ({ filter }: TodoListContainerProps) => {
           <Text color="gray.100">No todos found for the selected filter.</Text>
         ) : (
           filteredTodos &&
-          filteredTodos?.map((todo) => (
-            <Box
-              display="flex"
-              flexDirection="row"
-              justifyItems={'space-around'}
-              key={todo.id}
-              p={4}
-              w="60%"
-              mb={2}
-            >
-              <>
-                <Checkbox mr={2} isChecked={todo.isComplete} />
-                <Text as={todo.isComplete ? 'del' : undefined} color="gray.100">
-                  {todo.task_name}
-                </Text>
-              </>
-            </Box>
-          ))
+          filteredTodos?.map((todo) => <TodoItem todo={todo} />)
         )}
       </Stack>
     </Flex>
