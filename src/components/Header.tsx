@@ -1,18 +1,24 @@
-import { Flex, Button, useColorMode } from '@chakra-ui/react';
+import { Stack } from '@chakra-ui/react';
+import { FilterPicker } from './ui/organisms/FilterPicker';
 
-export const Header = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
+interface HeaderProps {
+  filter: string;
+  setFilter: (arg: string) => void;
+}
+
+export const Header = ({ filter, setFilter }: HeaderProps) => {
   return (
-    <Flex
+    <Stack
+      flexGrow={1}
+      flexDirection={'row'}
       alignItems={'center'}
-      justifyContent={'center'}
+      justifyContent={'space-evenly'}
       width={'100%'}
-      bg={colorMode === 'light' ? 'gray.100' : 'gray.900'}
-      color={colorMode === 'light' ? 'black' : 'white'}
+      bg={'gray.800'}
+      borderBottom="1px solid"
+      borderColor="black"
     >
-      <Button mb={2} onClick={toggleColorMode}>
-        Toggle {colorMode === 'light' ? 'Dark' : 'Light'} Mode
-      </Button>
-    </Flex>
+      <FilterPicker filter={filter} setFilter={setFilter} />
+    </Stack>
   );
 };
