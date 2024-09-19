@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { SettingsIcon, CalendarIcon } from '@chakra-ui/icons';
 import { useState, useRef } from 'react';
+import { useDeleteTodo } from '../../../queries/todoApi';
 
 interface TodoItemProps {
   todo: Task;
@@ -34,15 +35,16 @@ export const TodoItem = ({
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [taskValue, setTaskValue] = useState<string>(todo.task_name);
   const [taskDate, setTaskDate] = useState<string>(todo.due_date);
-
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { mutate: deleteTodo } = useDeleteTodo();
 
   const handleCheckbox = () => {
     setToggleCheckBox(!toggleCheckBox);
   };
 
   const handleSave = () => {
-    onSaveEdit(todo.id, { task_name: taskValue, due_date: taskDate });
+    onSaveEdit(todo._id, { task_name: taskValue, due_date: taskDate });
     setIsEditing(false);
   };
 
@@ -52,13 +54,17 @@ export const TodoItem = ({
     }
   };
 
+  const handleDelete = () => {
+    deleteTodo(todo._id);
+  };
+
   return (
     <Flex
       display="flex"
       flexDirection="row"
       justifyContent={'space-between'}
       alignItems="center"
-      key={todo.id}
+      key={todo._id}
       p={4}
       w="60%"
       mb={2}
@@ -68,7 +74,6 @@ export const TodoItem = ({
     >
       {isEditing ? (
         <Box w={'100%'}>
-          {/* Mode édition - Texte et Date modifiables */}
           <Input
             value={taskValue}
             onChange={(e) => setTaskValue(e.target.value)}
@@ -76,7 +81,6 @@ export const TodoItem = ({
             color={'gray.100'}
             mb={2}
           />
-          {/* Input de date avec une icône personnalisée */}
           <InputGroup>
             <Input
               type="date"
@@ -126,7 +130,6 @@ export const TodoItem = ({
             </Text>
           </Box>
 
-          {/* Icône Settings */}
           <Box
             onClick={onMenuToggle}
             _hover={{ cursor: 'pointer' }}
@@ -136,7 +139,6 @@ export const TodoItem = ({
             <SettingsIcon color={'gray.500'} />
           </Box>
 
-          {/* Menu déroulant */}
           {isMenuOpen && (
             <Box
               position="absolute"
@@ -160,7 +162,12 @@ export const TodoItem = ({
               >
                 Edit
               </Text>
-              <Text color="gray.100" _hover={{ bg: 'gray.600' }} p={2}>
+              <Text
+                color="gray.100"
+                _hover={{ bg: 'gray.600' }}
+                p={2}
+                onClick={handleDelete}
+              >
                 Delete
               </Text>
             </Box>

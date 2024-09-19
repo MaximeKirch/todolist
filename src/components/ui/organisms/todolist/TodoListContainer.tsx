@@ -1,5 +1,5 @@
 import { Flex, Spinner, Stack, Text } from '@chakra-ui/react';
-import { useGetTodos } from '../../../../queries/todoApi';
+import { useGetTodos, useUpdateTodo } from '../../../../queries/todoApi';
 import { filterTodos } from '../../../../utils/filterTodos';
 import { AddTodoContainer } from './AddTodoContainer';
 import { Task } from '../../../../types/TaskType';
@@ -12,6 +12,7 @@ interface TodoListContainerProps {
 
 export const TodoListContainer = ({ filter }: TodoListContainerProps) => {
   const { data: todos, isLoading, isError } = useGetTodos();
+  const { mutate: updateTodo } = useUpdateTodo();
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [localTodos, setLocalTodos] = useState<Task[]>([]); // Gestion locale des todos
 
@@ -56,14 +57,14 @@ export const TodoListContainer = ({ filter }: TodoListContainerProps) => {
   };
 
   const handleSaveEdit = (
-    id: string,
+    _id: string,
     updatedTask: { task_name: string; due_date: string }
   ) => {
-    // Mettre à jour la tâche localement
-    const updatedTodos = localTodos.map((todo: Task) =>
-      todo.id === id ? { ...todo, ...updatedTask } : todo
-    );
-    setLocalTodos(updatedTodos);
+    updateTodo({
+      _id,
+      task_name: updatedTask.task_name,
+      due_date: updatedTask.due_date,
+    });
   };
 
   return (
@@ -84,10 +85,10 @@ export const TodoListContainer = ({ filter }: TodoListContainerProps) => {
           filteredTodos &&
           filteredTodos?.map((todo: Task) => (
             <TodoItem
-              key={todo.id}
+              key={todo._id}
               todo={todo}
-              isMenuOpen={openMenuId === todo.id}
-              onMenuToggle={() => handleMenuToggle(todo.id)}
+              isMenuOpen={openMenuId === todo._id}
+              onMenuToggle={() => handleMenuToggle(todo._id)}
               onSaveEdit={handleSaveEdit}
             />
           ))

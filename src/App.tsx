@@ -5,14 +5,17 @@ import {
   Route,
   Routes,
   Navigate,
+  Outlet,
 } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { LoginPage } from './components/LoginPage';
 import { Dashboard } from './components/Dashboard';
+import { RegisterPage } from './components/RegisterPage';
 
-const PrivateRoute = ({ children }: { children: JSX.Element }) => {
+const PrivateRoute = () => {
   const { user } = useAuth();
-  return !!user ? children : <Navigate to="/login" />;
+
+  return user ? <Outlet /> : <Navigate to="/login" />;
 };
 
 function App() {
@@ -21,14 +24,10 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/dashboard"
-            element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
-            }
-          />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route element={<PrivateRoute />}>
+            <Route path={'/dashboard'} element={<Dashboard />} />
+          </Route>
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </AuthProvider>

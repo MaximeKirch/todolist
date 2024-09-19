@@ -1,5 +1,5 @@
 import { Stack } from '@chakra-ui/react';
-import { FilterPicker } from './ui/organisms/FilterPicker';
+import { FilterPicker } from './FilterPicker';
 
 interface HeaderProps {
   filter: string;
