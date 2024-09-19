@@ -10,7 +10,6 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { LoginPage } from './components/LoginPage';
 import { Dashboard } from './components/Dashboard';
 
-// Composant pour protéger les routes privées
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   const { user } = useAuth();
   return !!user ? children : <Navigate to="/login" />;

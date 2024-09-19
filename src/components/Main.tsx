@@ -1,5 +1,5 @@
-import { TodoListContainer } from './todolist/TodoListContainer';
 import { Stack } from '@chakra-ui/react';
+import { TodoListContainer } from './ui/organisms/todolist/TodoListContainer';
 
 interface MainProps {
   filter: string;
