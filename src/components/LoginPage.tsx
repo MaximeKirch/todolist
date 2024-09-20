@@ -13,6 +13,9 @@ export const LoginPage = () => {
       p={4}
     >
       <motion.div
+        initial={{ opacity: 0, y: 20 }} // Démarrage invisible et légèrement décalé vers le bas
+        animate={{ opacity: 1, y: 0 }} // Transition vers une pleine visibilité
+        transition={{ duration: 0.8, ease: 'easeOut' }} // Durée et type d'animation
         style={{
           width: '100%',
           maxWidth: '400px',

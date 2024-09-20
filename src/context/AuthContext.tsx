@@ -113,8 +113,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (storedUser && token) {
       navigate('/dashboard');
-    } else {
-      navigate('/login');
     }
   }, [navigate]);
 

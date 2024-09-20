@@ -1,10 +1,15 @@
 import { Flex, Spinner, Stack, Text } from '@chakra-ui/react';
-import { useGetTodos, useUpdateTodo } from '../../../../queries/todoApi';
+import {
+  useDeleteTodo,
+  useGetTodos,
+  useUpdateTodo,
+} from '../../../../queries/todoApi';
 import { filterTodos } from '../../../../utils/filterTodos';
 import { AddTodoContainer } from './AddTodoContainer';
 import { Task } from '../../../../types/TaskType';
 import { TodoItem } from '../TodoItem';
 import { useState, useEffect } from 'react';
+import { ConfirmationToast } from './ConfirmationToast';
 
 interface TodoListContainerProps {
   filter: string;
@@ -13,8 +18,15 @@ interface TodoListContainerProps {
 export const TodoListContainer = ({ filter }: TodoListContainerProps) => {
   const { data: todos, isLoading, isError } = useGetTodos();
   const { mutate: updateTodo } = useUpdateTodo();
+  const { mutate: deleteTodo } = useDeleteTodo();
+
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [localTodos, setLocalTodos] = useState<Task[]>([]); // Gestion locale des todos
+  const [isDeleteToastVisible, setDeleteToastVisible] =
+    useState<boolean>(false);
+  const [isConfirmationToastVisible, setConfirmationToastVisible] =
+    useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string>('');
 
   // Met à jour localTodos lorsque `todos` est chargé
   useEffect(() => {
@@ -67,9 +79,29 @@ export const TodoListContainer = ({ filter }: TodoListContainerProps) => {
     });
   };
 
+  const handleDelete = (todo: Task) => {
+    deleteTodo(todo._id, {
+      onSuccess: () => {
+        setToastMessage('Task successfully deleted!');
+        setDeleteToastVisible(true);
+
+        setTimeout(() => setDeleteToastVisible(false), 2000);
+      },
+      onError: (error) => {
+        setToastMessage('Error deleting task.');
+        setDeleteToastVisible(true);
+
+        setTimeout(() => setDeleteToastVisible(false), 2000);
+      },
+    });
+  };
+
   return (
     <Flex width={'100%'} flexDirection={'column'} alignItems={'center'}>
-      <AddTodoContainer />
+      <AddTodoContainer
+        setConfirmationToastVisible={setConfirmationToastVisible}
+        setToastMessage={setToastMessage}
+      />
       <Stack
         minHeight={'100vh'}
         width="100%"
@@ -90,8 +122,27 @@ export const TodoListContainer = ({ filter }: TodoListContainerProps) => {
               isMenuOpen={openMenuId === todo._id}
               onMenuToggle={() => handleMenuToggle(todo._id)}
               onSaveEdit={handleSaveEdit}
+              handleDelete={handleDelete}
             />
           ))
+        )}
+        {isConfirmationToastVisible && (
+          <ConfirmationToast
+            message={toastMessage}
+            isVisible={isConfirmationToastVisible}
+            onClose={() => {
+              setConfirmationToastVisible(false);
+            }}
+          />
+        )}
+        {isDeleteToastVisible && (
+          <ConfirmationToast
+            message={toastMessage}
+            isVisible={isDeleteToastVisible}
+            onClose={() => {
+              setDeleteToastVisible(false);
+            }}
+          />
         )}
       </Stack>
     </Flex>

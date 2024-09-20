@@ -2,28 +2,43 @@ import { Input, InputGroup, InputRightElement, Stack } from '@chakra-ui/react';
 import { CheckIcon, CalendarIcon } from '@chakra-ui/icons';
 import { useState, useRef } from 'react';
 import { useAddTodo } from '../../../../queries/todoApi';
+import { ConfirmationToast } from './ConfirmationToast';
 
 interface NewTask {
   task_name: string;
   due_date: string;
 }
 
-export const AddTodoContainer = () => {
+export const AddTodoContainer = ({
+  setConfirmationToastVisible,
+  setToastMessage,
+}: {
+  setConfirmationToastVisible: (arg: boolean) => void;
+  setToastMessage: (message: string) => void;
+}) => {
   const [taskValue, setTaskValue] = useState<string>('');
   const [taskDate, setTaskDate] = useState<string>('');
 
   const addTaskMutation = useAddTodo();
   const dateInputRef = useRef<HTMLInputElement>(null);
 
-  const handleAddTask = () => {
+  const handleAddTask = async () => {
     if (!taskValue) return;
 
     const dueDate = taskDate || new Date().toISOString().split('T')[0];
 
-    addTaskMutation.mutate({
-      task_name: taskValue,
-      due_date: dueDate,
-    });
+    try {
+      addTaskMutation.mutate({
+        task_name: taskValue,
+        due_date: dueDate,
+      });
+      setTaskDate('');
+      setTaskValue('');
+      setToastMessage('Task successfully added !');
+      setConfirmationToastVisible(true);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const openDatePicker = () => {

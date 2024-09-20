@@ -15,10 +15,15 @@ export const filterTodos = ({ todos, filter }: filterTodosProps) => {
 
   const weekTodos = todos.filter((todo) => {
     const dueDate = new Date(todo.due_date);
+    const today = new Date();
+
     const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay());
-    const endOfWeek = new Date(today);
-    endOfWeek.setDate(today.getDate() - today.getDay() + 6);
+    startOfWeek.setDate(
+      today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1)
+    );
+
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
 
     return (
       dueDate >= startOfWeek && dueDate <= endOfWeek && !dayTodos.includes(todo)

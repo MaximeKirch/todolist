@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
 interface Task {
+  id?: string;
   _id?: string;
   task_name: string;
   due_date: string;
@@ -42,6 +43,7 @@ export const useAddTodo = () => {
 
   return useMutation({
     mutationFn: async (newTask: Task) => {
+      console.log('HELLO POST MUTATION');
       const response = await axiosInstance.post(`/api/todos`, newTask);
       return response.data;
     },
@@ -50,6 +52,8 @@ export const useAddTodo = () => {
         ...oldTodos,
         newTask,
       ]);
+
+      console.log('SUCCESS, NEW TASK : ', newTask);
     },
   });
 };
@@ -83,10 +87,12 @@ export const useDeleteTodo = () => {
       const response = await axiosInstance.delete(`/api/todo/${taskId}`);
       return response.data;
     },
-    onSuccess: (taskId: string) => {
-      queryClient.setQueryData<Task[]>(['todos'], (oldTodos = []) =>
-        oldTodos.filter((todo) => todo._id !== taskId)
-      );
+    onSuccess: () => {
+      // Invalider la requête pour forcer la mise à jour des données
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
+    onError: (e) => {
+      console.log(e, 'ERROR WHILE DELETING');
     },
   });
 };
