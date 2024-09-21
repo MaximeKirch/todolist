@@ -2,7 +2,6 @@ import { Input, InputGroup, InputRightElement, Stack } from '@chakra-ui/react';
 import { CheckIcon, CalendarIcon } from '@chakra-ui/icons';
 import { useState, useRef } from 'react';
 import { useAddTodo } from '../../../../queries/todoApi';
-import { ConfirmationToast } from './ConfirmationToast';
 
 interface NewTask {
   task_name: string;
