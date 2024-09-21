@@ -185,7 +185,7 @@ export const TodoItem = ({
                   >
                     <Text
                       color="gray.100"
-                      _hover={{ bg: 'gray.600' }}
+                      _hover={{ bg: 'gray.600', cursor: 'pointer' }}
                       p={2}
                       onClick={() => {
                         setIsEditing(true);
@@ -196,7 +196,7 @@ export const TodoItem = ({
                     </Text>
                     <Text
                       color="gray.100"
-                      _hover={{ bg: 'gray.600' }}
+                      _hover={{ bg: 'gray.600', cursor: 'pointer' }}
                       p={2}
                       onClick={handleDeleteWithAnimation}
                     >
