@@ -2,6 +2,6 @@ export interface Task {
   id: string;
   _id: string;
   task_name: string;
-  isComplete: boolean;
+  is_complete: boolean;
   due_date: string;
 }

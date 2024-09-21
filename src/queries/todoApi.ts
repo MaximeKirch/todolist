@@ -4,8 +4,9 @@ import axios from 'axios';
 interface Task {
   id?: string;
   _id?: string;
-  task_name: string;
-  due_date: string;
+  task_name?: string;
+  due_date?: string;
+  is_complete?: boolean;
 }
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -43,7 +44,6 @@ export const useAddTodo = () => {
 
   return useMutation({
     mutationFn: async (newTask: Task) => {
-      console.log('HELLO POST MUTATION');
       const response = await axiosInstance.post(`/api/todos`, newTask);
       return response.data;
     },
@@ -52,8 +52,6 @@ export const useAddTodo = () => {
         ...oldTodos,
         newTask,
       ]);
-
-      console.log('SUCCESS, NEW TASK : ', newTask);
     },
   });
 };
@@ -79,6 +77,27 @@ export const useUpdateTodo = () => {
   });
 };
 
+export const useCompleteTodo = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (updatedTask: Task) => {
+      const response = await axiosInstance.patch(
+        `/api/todo/${updatedTask._id}/complete`,
+        updatedTask
+      );
+      return response.data;
+    },
+    onSuccess: (updatedTask: Task) => {
+      queryClient.setQueryData<Task[]>(['todos'], (oldTodos = []) =>
+        oldTodos.map((todo) =>
+          todo._id === updatedTask._id ? updatedTask : todo
+        )
+      );
+    },
+  });
+};
+
 export const useDeleteTodo = () => {
   const queryClient = useQueryClient();
 
@@ -88,7 +107,6 @@ export const useDeleteTodo = () => {
       return response.data;
     },
     onSuccess: () => {
-      // Invalider la requête pour forcer la mise à jour des données
       queryClient.invalidateQueries({ queryKey: ['todos'] });
     },
     onError: (e) => {

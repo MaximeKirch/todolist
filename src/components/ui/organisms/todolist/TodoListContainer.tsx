@@ -1,5 +1,6 @@
 import { Flex, Spinner, Stack, Text } from '@chakra-ui/react';
 import {
+  useCompleteTodo,
   useDeleteTodo,
   useGetTodos,
   useUpdateTodo,
@@ -19,6 +20,7 @@ export const TodoListContainer = ({ filter }: TodoListContainerProps) => {
   const { data: todos, isLoading, isError } = useGetTodos();
   const { mutate: updateTodo } = useUpdateTodo();
   const { mutate: deleteTodo } = useDeleteTodo();
+  const { mutate: completeTodo } = useCompleteTodo();
 
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [localTodos, setLocalTodos] = useState<Task[]>([]); // Gestion locale des todos
@@ -79,6 +81,16 @@ export const TodoListContainer = ({ filter }: TodoListContainerProps) => {
     });
   };
 
+  const handleCompleteTodo = (
+    _id: string,
+    updatedTask: { is_complete: boolean }
+  ) => {
+    completeTodo({
+      _id,
+      is_complete: updatedTask.is_complete,
+    });
+  };
+
   const handleDelete = (todo: Task) => {
     deleteTodo(todo._id, {
       onSuccess: () => {
@@ -123,6 +135,7 @@ export const TodoListContainer = ({ filter }: TodoListContainerProps) => {
               onMenuToggle={() => handleMenuToggle(todo._id)}
               onSaveEdit={handleSaveEdit}
               handleDelete={handleDelete}
+              onComplete={handleCompleteTodo}
             />
           ))
         )}

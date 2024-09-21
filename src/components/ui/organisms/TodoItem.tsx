@@ -10,7 +10,7 @@ import {
   InputRightElement,
 } from '@chakra-ui/react';
 import { SettingsIcon, CalendarIcon } from '@chakra-ui/icons';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion'; // Import AnimatePresence
 
 interface TodoItemProps {
@@ -21,6 +21,7 @@ interface TodoItemProps {
     id: string,
     updatedTask: { task_name: string; due_date: string }
   ) => void;
+  onComplete: (id: string, updatedTask: { is_complete: boolean }) => void;
   handleDelete: (task: Task) => void;
 }
 
@@ -30,9 +31,10 @@ export const TodoItem = ({
   onMenuToggle,
   onSaveEdit,
   handleDelete,
+  onComplete,
 }: TodoItemProps) => {
   const [toggleCheckBox, setToggleCheckBox] = useState<boolean>(
-    todo.isComplete
+    todo.is_complete
   );
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [taskValue, setTaskValue] = useState<string>(todo.task_name);
@@ -40,8 +42,13 @@ export const TodoItem = ({
   const [isVisible, setIsVisible] = useState(true);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    setToggleCheckBox(todo.is_complete);
+  }, [todo.is_complete]);
+
   const handleCheckbox = () => {
     setToggleCheckBox(!toggleCheckBox);
+    onComplete(todo._id, { is_complete: !todo.is_complete });
   };
 
   const handleSave = () => {

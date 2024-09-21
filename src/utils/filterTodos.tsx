@@ -54,7 +54,7 @@ export const filterTodos = ({ todos, filter }: filterTodosProps) => {
     const dueDate = new Date(todo.due_date);
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    return dueDate < yesterday && !todo.isComplete;
+    return dueDate < yesterday && !todo.is_complete;
   });
 
   // Filtrer selon le filtre sélectionné
