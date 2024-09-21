@@ -3,11 +3,6 @@ import { CheckIcon, CalendarIcon } from '@chakra-ui/icons';
 import { useState, useRef } from 'react';
 import { useAddTodo } from '../../../../queries/todoApi';
 
-interface NewTask {
-  task_name: string;
-  due_date: string;
-}
-
 export const AddTodoContainer = ({
   setConfirmationToastVisible,
   setToastMessage,
